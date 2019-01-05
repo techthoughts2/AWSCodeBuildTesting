@@ -10,14 +10,14 @@ phases:
       - powershell -command '.\configure_aws_credential.ps1'
       - aws s3 cp s3://ps-invoke-modules/PowerShell-6.1.1-win-x64.msi PowerShell-6.1.1-win-x64.msi
       - powershell -command "Start-Process .\PowerShell-6.1.1-win-x64.msi -ArgumentList '/qn /norestart' -Wait"
-      - powershell -command 'Get-CimInstance -ClassName Win32_Product'
-      - powershell -command "$global:poshcore = 'C:\Program Files\PowerShell\6'"
-      - powershell -command 'Set-Alias pwsh $poshcore\pwsh.exe'
-      - powershell -command 'Start-Sleep(15)'
-      - pwsh -command '.\install_modules.ps1'
+      #- powershell -command 'Get-CimInstance -ClassName Win32_Product'
+      #- powershell -command "$global:poshcore = 'C:\Program Files\PowerShell\6'"
+      #- powershell -command 'Set-Alias pwsh $poshcore\pwsh.exe'
+      #- powershell -command 'Start-Sleep(15)'
   pre_build:
     commands:
       - pwsh -command '$PSVersionTable'
+      - pwsh -command '.\install_modules.ps1'
   build:
     commands:
       - pwsh -command 'Get-Module -ListAvailable'
