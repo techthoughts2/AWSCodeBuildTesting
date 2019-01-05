@@ -12,6 +12,7 @@ phases:
       - aws s3 cp s3://ps-invoke-modules/PowerShell-6.1.1-win-x64.msi PowerShell-6.1.1-win-x64.msi --quiet
       - powershell -command "Start-Process .\PowerShell-6.1.1-win-x64.msi -ArgumentList '/qn /norestart' -Wait"
       - Set-Alias pwsh 'C:\Program Files\PowerShell\6\pwsh.exe'
+      - Get-Alias
       #- powershell -command 'Get-CimInstance -ClassName Win32_Product'
       #- powershell -command "$global:poshcore = 'C:\Program Files\PowerShell\6'"
       #- powershell -command 'Set-Alias pwsh $poshcore\pwsh.exe'
@@ -19,7 +20,7 @@ phases:
   pre_build:
     commands:
       #- '& "c:\Program Files\PowerShell\6\pwsh.exe" $PSVersionTable'
-      - pwsh -command '$PSVersionTable'
+      - pwsh -command "$PSVersionTable"
       #- pwsh -command '.\install_modules.ps1'
   build:
     commands:
