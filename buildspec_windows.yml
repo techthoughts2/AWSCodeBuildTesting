@@ -10,13 +10,13 @@ phases:
       - powershell -command '.\configure_aws_credential.ps1'
       - aws s3 cp s3://ps-invoke-modules/PowerShell-6.1.1-win-x64.msi PowerShell-6.1.1-win-x64.msi
       - msiexec -command '/i .\PowerShell-6.1.1-win-x64.msi /q'
-      - pwsh -command '.\install_modules.ps1'
+      - C:\Program Files\PowerShell\6\pwsh.exe -command '.\install_modules.ps1'
   pre_build:
     commands:
-      - pwsh -command '$PSVersionTable'
+      - C:\Program Files\PowerShell\6\pwsh.exe\pwsh -command '$PSVersionTable'
   build:
     commands:
-      - pwsh -command 'Get-Module -ListAvailable'
+      - C:\Program Files\PowerShell\6\pwsh.exe\pwsh -command 'Get-Module -ListAvailable'
 artifacts:
   files:
     #- '**/*'
