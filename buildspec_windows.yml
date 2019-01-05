@@ -1,0 +1,23 @@
+# This is a simple CodeBuild build file for PowerShell.
+#  - pre_build step will ensure the Module Name / Version has not previously been built for production
+#  - build step will perform the script analysis, pester tests, and Module compilation for publishing
+
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - powershell -command '.\configure_aws_credential.ps1'
+      - aws s3 cp s3://ps-invoke-modules/PowerShell-6.1.1-win-x64.msi PowerShell-6.1.1-win-x64.msi
+      - msiexec -command '/i .\PowerShell-6.1.1-win-x64.msi /q'
+      - pwsh -command '.\install_modules.ps1'
+  pre_build:
+    commands:
+      - pwsh -command '$PSVersionTable'
+  build:
+    commands:
+      - pwsh -command 'Get-Module -ListAvailable'
+artifacts:
+  files:
+    #- '**/*'
+  base-directory: 'PowerShellModule\Archive'
