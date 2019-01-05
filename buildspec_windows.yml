@@ -20,7 +20,7 @@ phases:
       #- '& "c:\Program Files\PowerShell\6\pwsh.exe" $PSVersionTable'
       #- Set-Alias pwsh 'C:\Program Files\PowerShell\6\pwsh.exe'
       #- Get-Alias
-      - '& "C:\Program Files\PowerShell\6\pwsh.exe" -command "$PSVersionTable"'
+      - "& 'C:\Program Files\PowerShell\6\pwsh.exe' -command '$PSVersionTable'"
       #- pwsh -command "$PSVersionTable"
       #- pwsh -command '.\install_modules.ps1'
   build:
