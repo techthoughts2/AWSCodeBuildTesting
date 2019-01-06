@@ -23,7 +23,7 @@ $modulesToInstall = @(
         KeyPrefix     = ''
     },
     @{
-        ModuleName    = 'AWSPowerShell'
+        ModuleName    = 'AWSPowerShell.NetCore'
         ModuleVersion = '3.3.428.0'
         BucketName    = 'ps-invoke-modules'
         KeyPrefix     = ''
