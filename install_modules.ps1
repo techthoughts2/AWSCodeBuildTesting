@@ -1,46 +1,63 @@
 <#
-.SYNOPSIS
-    This script is used in AWS CodeBuild to install the required PowerShell Modules for the build process.
-.NOTES
-
+    .SYNOPSIS
+    This script is used in AWS CodeBuild to install the required PowerShell Modules
+    for the build process.
 #>
 $ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'
 $VerbosePreference = 'SilentlyContinue'
 
+# List of PowerShell Modules required for the build
+# The AWS PowerShell Modules are added below, based on the $PSEdition
+$modulesToInstall = [System.Collections.ArrayList]::new()
+$null = $modulesToInstall.Add(([PSCustomObject]@{
+    ModuleName    = 'Pester'
+    ModuleVersion = '4.4.4'
+    BucketName    = 'ps-invoke-modules'
+    KeyPrefix     = ''
+}))
+$null = $modulesToInstall.Add(([PSCustomObject]@{
+    ModuleName    = 'InvokeBuild'
+    ModuleVersion = '5.4.2'
+    BucketName    = 'ps-invoke-modules'
+    KeyPrefix     = ''
+}))
+$null = $modulesToInstall.Add(([PSCustomObject]@{
+    ModuleName    = 'PSScriptAnalyzer'
+    ModuleVersion = '1.17.1'
+    BucketName    = 'ps-invoke-modules'
+    KeyPrefix     = ''
+}))
+$null = $modulesToInstall.Add(([PSCustomObject]@{
+    ModuleName    = 'platyPS'
+    ModuleVersion = '0.12.0'
+    BucketName    = 'ps-invoke-modules'
+    KeyPrefix     = ''
+}))
+
 $tempPath = [System.IO.Path]::GetTempPath()
-$moduleInstallPath = 'C:\Program Files\PowerShell\Modules'
-$modulesToInstall = @(
-    @{
-        ModuleName    = 'Pester'
-        ModuleVersion = '4.4.4'
+if ($PSEdition -eq 'Desktop') {
+    $moduleInstallPath = [System.IO.Path]::Combine($env:ProgramFiles, 'WindowsPowerShell', 'Modules')
+
+    # Add the AWSPowerShell Module
+    $null = $modulesToInstall.Add(([PSCustomObject]@{
+        ModuleName    = 'AWSPowerShell'
+        ModuleVersion = '3.3.428.0'
         BucketName    = 'ps-invoke-modules'
         KeyPrefix     = ''
-    },
-    @{
-        ModuleName    = 'InvokeBuild'
-        ModuleVersion = '5.4.2'
-        BucketName    = 'ps-invoke-modules'
-        KeyPrefix     = ''
-    },
-    @{
+    }))
+}
+else {
+    $moduleInstallPath = [System.IO.Path]::Combine('/', 'usr', 'local', 'share', 'powershell', 'Modules')
+
+    # Add the AWSPowerShell.NetCore Module
+    $null = $modulesToInstall.Add(([PSCustomObject]@{
         ModuleName    = 'AWSPowerShell.NetCore'
         ModuleVersion = '3.3.428.0'
         BucketName    = 'ps-invoke-modules'
         KeyPrefix     = ''
-    },
-    @{
-        ModuleName    = 'PSScriptAnalyzer'
-        ModuleVersion = '1.17.1'
-        BucketName    = 'ps-invoke-modules'
-        KeyPrefix     = ''
-    },
-    @{
-        ModuleName    = 'platyPS'
-        ModuleVersion = '0.12.0'
-        BucketName    = 'ps-invoke-modules'
-        KeyPrefix     = ''
-    }
-)
+    }))
+}
 
 'Installing PowerShell Modules'
 foreach ($module in $modulesToInstall) {
@@ -53,7 +70,13 @@ foreach ($module in $modulesToInstall) {
     # Download modules from S3 to using the AWS CLI
     $s3Uri = 's3://{0}/{1}{2}' -f $module.BucketName, $module.KeyPrefix, $key
     & aws s3 cp $s3Uri $localFile --quiet
-    #& aws s3 cp $s3Uri $localFile
+
+    # Ensure the download worked
+    if (-not(Test-Path -Path $localFile)) {
+        $message = 'Failed to download {0}' -f $module.ModuleName
+        "  - $message"
+        throw $message
+    }
 
     # Create module path
     $modulePath = Join-Path -Path $moduleInstallPath -ChildPath $module.ModuleName
