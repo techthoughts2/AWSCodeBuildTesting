@@ -8,7 +8,7 @@ $ErrorActionPreference = 'Stop'
 $VerbosePreference = 'SilentlyContinue'
 
 $tempPath = [System.IO.Path]::GetTempPath()
-$moduleInstallPath = 'C:\Program Files\WindowsPowerShell\Modules'
+$moduleInstallPath = 'C:\Program Files\PowerShell\Modules'
 $modulesToInstall = @(
     @{
         ModuleName    = 'Pester'
