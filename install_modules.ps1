@@ -39,6 +39,7 @@ $tempPath = [System.IO.Path]::GetTempPath()
 if ($PSVersionTable.Platform -eq 'Win32NT') {
     $moduleInstallPath = [System.IO.Path]::Combine($env:ProgramFiles, 'WindowsPowerShell', 'Modules')
     if ($PSEdition -eq 'Core') {
+        $moduleInstallPath = [System.IO.Path]::Combine($env:ProgramFiles, 'PowerShell', 'Modules')
         # Add the AWSPowerShell.NetCore Module
         $null = $modulesToInstall.Add(([PSCustomObject]@{
             ModuleName    = 'AWSPowerShell.NetCore'
@@ -48,6 +49,7 @@ if ($PSVersionTable.Platform -eq 'Win32NT') {
         }))
     }
     else{
+        $moduleInstallPath = [System.IO.Path]::Combine($env:ProgramFiles, 'WindowsPowerShell', 'Modules')
         # Add the AWSPowerShell Module
         $null = $modulesToInstall.Add(([PSCustomObject]@{
             ModuleName    = 'AWSPowerShell'
