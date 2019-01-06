@@ -18,7 +18,7 @@ phases:
       - pwsh -command 'New-Item -Path /Test/PhotoGroup -ItemType Directory | Out-Null'
       - pwsh -command 'New-Item -Path /Test/Photos -ItemType Directory | Out-Null'
       - pwsh -command 'New-Item -Path /Test/VideoGroup -ItemType Directory | Out-Null'
-      - pwsh -command 'New-Item -Path /Test/Videos -ItemType Directory | Out-Null
+      - pwsh -command 'New-Item -Path /Test/Videos -ItemType Directory | Out-Null'
       - aws s3 cp s3://poshgram-test-files/jean.gif /Test/Animation/jean.gif --quiet
       - aws s3 cp s3://poshgram-test-files/Tobu-_-Syndec-Dusk-_NCS-Release_-YouTube.mp3 /Test/Audio/Tobu-_-Syndec-Dusk-_NCS-Release_-YouTube.mp3 --quiet
       - aws s3 cp s3://poshgram-test-files/customlog.txt /Test/Documents/customlog.txt --quiet
